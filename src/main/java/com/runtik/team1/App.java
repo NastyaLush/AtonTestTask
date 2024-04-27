@@ -1,4 +1,4 @@
-package com.runtik.task1;
+package com.runtik.team1;
 
 /**
  * Hello world!

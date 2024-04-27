@@ -1,4 +1,4 @@
-package com.runtik.task2.task1;
+package com.runtik.team2.task1;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class FileManager {
+    private FileManager() {
+    }
 
     public static List<Person> readFile(String filePath, Printer p) throws IOException {
         Path path1 = Path.of(filePath);

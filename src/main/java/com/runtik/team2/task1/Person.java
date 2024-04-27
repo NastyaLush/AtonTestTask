@@ -1,4 +1,4 @@
-package com.runtik.task2.task1;
+package com.runtik.team2.task1;
 
 import java.util.ArrayList;
 import java.util.Iterator;
