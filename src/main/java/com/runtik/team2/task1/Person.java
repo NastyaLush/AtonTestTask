@@ -3,31 +3,39 @@ package com.runtik.team2.task1;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Phaser;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
 @AllArgsConstructor
-public class Person implements Runnable {
+public class Person extends Thread {
     @Getter
-    protected String name;
-    protected final List<String> phrases = new ArrayList<>();
-    protected final Printer printer;
+    private final String personName;
+    private final List<String> phrases = new ArrayList<>();
+    private final Printer printer;
+    private final Phaser phaser;
+    private final List<Person> order;
 
     @Override
     public void run() {
-        Iterator<String> iterator = phrases.iterator();
-        while (iterator.hasNext()) {
-            String phrase = iterator.next();
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            synchronized (printer) {
-                printer.print(name + ": " + phrase);
-            }
+        for (String phrase : phrases) {
+            waitForTurn();
+            printer.print(personName + ": " + phrase);
+            phaser.arriveAndAwaitAdvance();
         }
+        phaser.arriveAndDeregister();
+    }
 
+    private void waitForTurn() {
+        while (!isMyTurn()) {
+            phaser.arriveAndAwaitAdvance();
+        }
+    }
+
+    private boolean isMyTurn() {
+        return order.get(phaser.getPhase()).getPersonName().equals(personName);
     }
 
     public void addPhrase(String phrase) {
